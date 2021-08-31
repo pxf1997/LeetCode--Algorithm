@@ -1,0 +1,34 @@
+正确的完全背包模板：
+public int change(int amount, int[] coins) {
+    if (coins == null) {
+        return 0;
+    }
+    int[] dp = new int[amount + 1];
+    dp[0] = 1;
+    for (int coin : coins) {
+        for (int i = coin; i <= amount; i++) {
+            dp[i] += dp[i - coin];
+        }
+    }
+    return dp[amount];
+}
+
+
+//            for (int i = 1; i <= amount; i++) {
+////                注意细节--如果不进if条件，那么要考虑dp每个位置的初始化值
+//                for (int coin : coins) {
+//                    if (i >= coin) {
+//                        dp[i] += dp[i - coin];
+//                    }
+//                }
+//            }
+但是当你运行之后，却发现这个代码并不正确，
+得到的结果比预期的大。究其原因，该代码计算的结果是排列数，而不是组合数，
+也就是代码会把1,2和2,1当做两种情况。
+
+
+!!!总结，二维dp的组合数问题和排列数问题 都可以交换嵌套的循环，因为子问题不会变化；
+一维的dp组合数问题和排列数问题 不可以交换嵌套的循环，因为会改变子问题；
+一维的dp组合数问题，交换嵌套的循环，子问题会变成排列数问题； 一维的dp排列数问题，交换嵌套的循环，子问题会变成组合数问题；
+
+零钱兑换I和II都可以定义一阶dp和二阶dp，零钱兑换I因为是求最小值，排列和组合结果一样，而零钱兑换II排列结果会大于组合

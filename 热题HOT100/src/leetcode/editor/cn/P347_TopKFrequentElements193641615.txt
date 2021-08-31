@@ -1,0 +1,50 @@
+
+    // HashMap统计次数 + 按次数排序(存入最大堆)
+    class Solution {
+        public int[] topKFrequent(int[] nums, int k) {
+            // 1--map统计出现次数
+            Map<Integer, Integer> map = new HashMap<>();
+            for (int num : nums) {
+                map.put(num, map.getOrDefault(num, 0) + 1);
+            }
+
+            // 2--优先队列--最小堆统计出现次数
+            // 比堆顶次数大--弹出堆顶,入堆新entry
+            // 定制排序注意--堆存的是啥,Comparator泛型就是啥(按什么比)
+
+            // 1--土写法
+//            PriorityQueue<Map.Entry<Integer, Integer>> minHeap = new PriorityQueue<>(k,
+//                    new Comparator<Map.Entry<Integer, Integer>>() {
+//                        public int compare(Map.Entry<Integer, Integer> o1, Map.Entry<Integer, Integer> o2) {
+//                            return o1.getValue() - o2.getValue();
+//                        }
+//                    });
+            // 2--lamda表达式
+            PriorityQueue<Map.Entry<Integer, Integer>> minHeap = new PriorityQueue<>(k, (o1, o2) -> o1.getValue() - o2.getValue());
+            for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+                if (minHeap.size() < k) {
+                    minHeap.offer(entry);
+                } else {
+                    // 堆满了,当前entry次数 > 堆顶次数 则入堆
+                    if (entry.getValue() > minHeap.peek().getValue()) {
+                        minHeap.poll();
+                        minHeap.offer(entry);
+                    }
+                }
+            }
+            System.out.println("minHeap = " + minHeap);
+            // 3--返回结果
+            int[] res = new int[k];
+            int idx = 0;
+            while (!minHeap.isEmpty()) {
+                Map.Entry<Integer, Integer> cur = minHeap.poll();
+                System.out.println("元素值:" + cur.getKey() + "  出现次数:" + cur.getValue());
+                res[(k - 1) - idx] = cur.getKey();
+                idx++;
+            }
+            return res;
+        }
+    }
+
+//runtime:27 ms
+//memory:41 MB

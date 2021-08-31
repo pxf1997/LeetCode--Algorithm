@@ -1,0 +1,16 @@
+//            状态分析：
+//            未进行过任何操作；不考虑
+//            只进行过一次买操作；buy1
+//            进行了一次买操作和一次卖操作，即完成了一笔交易；sell1
+//            在完成了一笔交易的前提下，进行了第二次买操作；buy2
+//            完成了全部两笔交易。sell2
+
+//            状态转移：
+//            buy1[i] = Math.max(buy1[i - 1], -prices[i]);
+//            sell1[i] = Math.max(sell1[i - 1], buy1[i - 1] + prices[i]);
+//            buy2[i] = Math.max(buy2[i - 1], sell1[i - 1] - prices[i]);
+//            sell2[i] = Math.max(sell2[i - 1], buy2[i - 1] + prices[i]);
+
+//            边界条件：无论题目中是否允许「在同一天买入并且卖出」这一操作，最终的答案都不会受到影响，这是因为这一操作带来的收益为零。
+//            buy1=-prices[0];
+//            buy2即为在同一天买入并且卖出后再以prices[0] 的价格买入股票:buy2=-prices[0];
